@@ -37,12 +37,12 @@ def execute_db_action(action, *args, **kwargs):
 
 
 @router.get(
-    path="/{key}",
+    path="/",
     status_code=status.HTTP_200_OK,
 )
-def get(key: str = Path(...)):
+def get_all():
     return {
-        "value": execute_db_action("get", key=key)
+        "keys": execute_db_action("get_keys")
     }
 
 @router.post(
@@ -53,6 +53,15 @@ def insert(obj: Write = Body(...)):
     obj = obj.dict()
     execute_db_action("save", **obj)
     return { "result": "OK" }
+
+@router.get(
+    path="/{key}",
+    status_code=status.HTTP_200_OK,
+)
+def get(key: str = Path(...)):
+    return {
+        "value": execute_db_action("get", key=key)
+    }
 
 @router.put(
     path="/{key}",

@@ -15,5 +15,8 @@ settings = LocalSettings() if ENVIRONMENT == "local" else ProductionSettings()
 DB_PERSISTENT_DIR = ROOT_DIR.joinpath(f"db/db_{settings.ID}.json")
 if DB_PERSISTENT_DIR.exists():
     with DB_PERSISTENT_DIR.open("r") as f:
-        _data = json.load(f)
+        try:
+            _data = json.load(f)
+        except:
+            _data = {}
         DATABASE = {**DATABASE, **_data}
