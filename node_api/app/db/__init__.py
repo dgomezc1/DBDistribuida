@@ -1,7 +1,7 @@
 import copy
 import json
 
-from app.core.config import ROOT_DIR, DATABASE, settings
+from app.core.config import DB_PERSISTENT_DIR, DATABASE, settings
 
 class KeyAlreadyExistsError(Exception):
     pass
@@ -13,7 +13,7 @@ class NoSuchKeyError(Exception):
 class Database:
 
     def __init__(self):
-        self.location = ROOT_DIR.joinpath(f"db/db_{settings.ID}.json")
+        self.location = DB_PERSISTENT_DIR
         if not self.location.exists():
             self.location.touch()
 
