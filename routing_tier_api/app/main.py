@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 # from app.api.router import router
 
+from app.works.initialization import Initialization
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -15,6 +16,10 @@ app = FastAPI(
     swagger_ui_oauth2_redirect_url=f"{settings.PREFIX}/docs/oauth2-redirect",
     openapi_url=f"{settings.PREFIX}/openapi.json"
 )
+
+# Initialize nodes
+init_nodes = Initialization()
+init_nodes.run()
 
 # Register Middlewares
 

@@ -5,8 +5,6 @@ from fastapi import Response, HTTPException
 
 
 
-# TODO: Check node health
-# TODO: Key identifier
 # TODO: CRUD
 # TODO: Send request to specific node
 # TODO: return node response

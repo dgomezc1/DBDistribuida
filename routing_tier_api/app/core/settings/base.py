@@ -12,3 +12,5 @@ class BaseAppSettings(BaseSettings):
     APP_NAME: str = 'routing-tier-api'
     VERSION: str = '0.1.0'
     ORIGINS: List[str] = envs.list("ALLOWED_ORIGINS", default=[])
+    MAX_KEYS: int = int("14"+"0"*48)
+    NODE_HOSTS: List[str] = envs.list("NODES", default=[])

@@ -9,5 +9,3 @@ def health_check(base_url):
     if _json["value"] != "PONG":
         return False
     return True
-
-
