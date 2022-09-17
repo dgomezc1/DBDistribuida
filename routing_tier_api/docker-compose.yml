@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./docker/local/fastapi/Dockerfile
+    image: routing_tier_api_fastapi
+    container_name: routing_tier_api_fastapi
+    platform: linux/x86_64
+    volumes:
+      - .:/code:z
+    env_file:
+      - ./.envs/.app
+    ports:
+      - "8000:8000"
+    command: /start

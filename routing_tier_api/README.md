@@ -1,6 +1,6 @@
-# node-api
+# routing-tier-api
 
-project for db node simulation
+project for router tier
 
 [![Built with Cookiecutter](https://img.shields.io/badge/build%20with-Silin%20DS%20Cookiecutter%20FastAPI-purple)](https://gitlab.com/silin-project/data-science/project-templates/ds-fastapi-microservice-template/)
 
