@@ -1,0 +1,34 @@
+stages:
+  - lint
+  - testing
+
+
+.docker_template: &docker_config
+  image: docker/compose:1.29.2
+  tags:
+    - docker
+  services:
+    - docker:dind
+  before_script:
+    - docker-compose -f ./compose/dev.yml build
+    - docker-compose -f ./compose/dev.yml up -d
+
+flake8:
+  <<: *docker_config
+  stage: lint
+  script:
+    - docker-compose -f ./compose/dev.yml run --rm fastapi flake8
+  allow_failure: true
+
+pytest:
+  <<: *docker_config
+  stage: testing
+  script:
+    - docker-compose -f ./compose/dev.yml run fastapi pytest
+
+bandit:
+  <<: *docker_config
+  stage: testing
+  script:
+    - docker-compose -f ./compose/dev.yml run --rm fastapi bandit -r app
+  allow_failure: true
