@@ -36,3 +36,9 @@ def root():
     return {
         "message": f"Welcome to {settings.APP_NAME} | Version: {settings.VERSION}"
     }
+
+@app.get(f"{settings.PREFIX}/")
+def root():
+    return {
+        "node-idmessage": f"Node{settings.ID}"
+    }

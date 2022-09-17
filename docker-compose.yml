@@ -1,0 +1,64 @@
+version: '3.8'
+
+volumes:
+  distributed_db_data: {}
+
+services:
+
+  node1:
+    build:
+      context: ./node_api
+      dockerfile: ./docker/local/fastapi/Dockerfile
+    image: node_api_instance
+    container_name: node1_api_instance
+    platform: linux/x86_64
+    volumes:
+      - ./node_api:/code:z
+      - ./db_nodes_data:/db:z
+    env_file:
+      - ./node_api/.envs/.app
+    ports:
+      - "8887:8887"
+    command: /start
+    environment:
+      - ID=01
+      - PORT=8887
+
+  node2:
+    build:
+      context: ./node_api
+      dockerfile: ./docker/local/fastapi/Dockerfile
+    image: node_api_instance
+    container_name: node2_api_instance
+    platform: linux/x86_64
+    volumes:
+      - ./node_api:/code:z
+      - ./db_nodes_data:/db:z
+    env_file:
+      - ./node_api/.envs/.app
+    ports:
+      - "8888:8888"
+    command: /start
+    environment:
+      - ID=02
+      - PORT=8888
+
+  node3:
+    build:
+      context: ./node_api
+      dockerfile: ./docker/local/fastapi/Dockerfile
+    image: node_api_instance
+    container_name: node3_api_instance
+    platform: linux/x86_64
+    volumes:
+      - ./node_api:/code:z
+      - ./db_nodes_data:/db:z
+    env_file:
+      - ./node_api/.envs/.app
+    ports:
+      - "8889:8889"
+    command: /start
+    environment:
+      - ID=03
+      - PORT=8889
+
