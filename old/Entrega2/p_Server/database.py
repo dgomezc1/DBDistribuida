@@ -11,7 +11,7 @@ import os,json
 
 class Databases: 
 
-    def __init__(self , location=".\\db"):                      
+    def __init__(self , location):                      
         self.location = os.path.expanduser(location)        #Se busca ek archivo de db en el directorio
         self.loaddb(self.location)                          #Se llama a la funcion cargar base de datos 
 
@@ -27,7 +27,7 @@ class Databases:
             return False                                            #False en caso de no lograr escribir el archivo en local
 
     def save(self, key, value): 
-        try: 
+        try:
             self.db[str(key)] = value                                           #Se toma el json y a la clave que se ingresa se le asigna el value
             self.savedb()                                                       #Se llama a la funcion savedb para guardar los cambios en local
             return "Base de datos actualizada".encode("utf-8")                  #Se retorna mensaje de confirmacion

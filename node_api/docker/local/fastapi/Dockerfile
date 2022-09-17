@@ -53,5 +53,7 @@ COPY ./docker/local/fastapi/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
+RUN mkdir /db
+
 # copy application code to WORKDIR
 COPY . ${APP_HOME}

@@ -11,5 +11,5 @@ class BaseAppSettings(BaseSettings):
     PREFIX: str = ''
     APP_NAME: str = 'node-api'
     VERSION: str = '0.1.0'
-
+    ID = envs("ID")
     ORIGINS: List[str] = envs.list("ALLOWED_ORIGINS", default=[])
