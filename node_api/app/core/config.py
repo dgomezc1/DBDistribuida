@@ -7,6 +7,6 @@ from app.core.settings import LocalSettings, ProductionSettings
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent.parent
 
-DATABASE = {}
+DATABASE = { "PING": "PONG" }
 
 settings = LocalSettings() if ENVIRONMENT == "local" else ProductionSettings()

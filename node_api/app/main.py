@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Import routers
 
 from app.core.config import settings
-from app.api.sample.router import router as SampleRouter
+from app.api.router import router
 
 
 app = FastAPI(
@@ -28,7 +28,7 @@ app.add_middleware(
 
 
 # Register routers
-app.include_router(SampleRouter, prefix=settings.PREFIX)
+app.include_router(router, prefix=settings.PREFIX)
 
 # Default endpoint
 @app.get(f"{settings.PREFIX}/info")
