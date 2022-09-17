@@ -1,8 +1,5 @@
 version: '3.8'
 
-volumes:
-  distributed_db_data: {}
-
 services:
 
   node1:
@@ -62,3 +59,7 @@ services:
       - ID=03
       - PORT=8889
 
+# For future replication implementation
+networks:
+  default:
+    name: distributed_db_data_network
