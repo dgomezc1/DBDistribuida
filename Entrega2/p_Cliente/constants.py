@@ -1,0 +1,9 @@
+direccion = "127.0.0.1"
+puerto = "7000"
+RECV_BUFFER_SIZE = 1000000
+ENCONDING_FORMAT = "utf-8"
+SET = "SET"
+GET = "GET"
+DELETE = "DELETE"
+UPDATE = "UPDATE"
+QUIT = "QUIT"
