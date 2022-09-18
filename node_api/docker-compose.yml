@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: ./docker/local/fastapi/Dockerfile
+    image: node_api_fastapi
+    container_name: node_api_fastapi
+    platform: linux/x86_64
+    volumes:
+      - .:/code:z
+    env_file:
+      - ./.envs/.app
+    ports:
+      - "8888:8888"
+    command: /start

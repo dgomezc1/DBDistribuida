@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+
+  node_base: &node_base
+    build:
+      context: ./node_api
+      dockerfile: ./docker/local/fastapi/Dockerfile
+    image: node_api_instance
+    platform: linux/x86_64
+    volumes:
+      - ./node_api:/code:z
+      - ./db_nodes_data:/db:z
+    env_file:
+      - ./node_api/.envs/.app
+
+  node2:
+    <<: *node_base
+    container_name: node2_api_instance
+    ports:
+      - "8888:8888"
+    environment:
+      - ID=02
+      - PORT=8888
+    command: /start
+
+
+# For future replication implementation
+networks:
+  default:
+    name: distributed_db_data_network
