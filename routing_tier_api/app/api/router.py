@@ -2,31 +2,13 @@ from fastapi import APIRouter
 from fastapi import status, Path, Body
 from fastapi import Response, HTTPException
 
-
-
-
-# TODO: CRUD
-# TODO: Send request to specific node
-# TODO: return node response
-
-
 from .models import Write
-# from app.db import Database
-# from app.db import NoSuchKeyError
-# from app.db import KeyAlreadyExistsError
-
 
 from app.works.send_action import SendDBAction
 
 def execute_db_action(key, method, *args, **kwargs):
-    try:
-        sender = SendDBAction()
-        return sender.run(key, method, *args, **kwargs)
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
+    sender = SendDBAction()
+    return sender.run(key, method, *args, **kwargs)
 
 router = APIRouter(
     prefix="/db",

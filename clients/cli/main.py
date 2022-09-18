@@ -60,6 +60,6 @@ if __name__ == '__main__':
 
         try:
             command = get_command(command_parts[0])
-            command(*command_parts[1:])
+            command(host, *command_parts[1:])
         except Exception as e:
             print(f"[ERROR] {e}")

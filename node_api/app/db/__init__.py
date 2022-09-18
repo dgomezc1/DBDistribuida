@@ -30,8 +30,8 @@ class Database:
         self._persist()
 
     def save(self, key, value, *args, **kwargs):
-        if key in DATABASE:
-            raise KeyAlreadyExistsError(f"Key: {key} already exists in db.")
+        # if key in DATABASE:
+        #     raise KeyAlreadyExistsError(f"Key: {key} already exists in db.")
         self._write_base(key, value)
 
     def update(self, key, value, *args, **kwargs):
