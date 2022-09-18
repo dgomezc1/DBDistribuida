@@ -8,9 +8,9 @@ def validate_alive_nodes_number(nodes):
         "n_nodes": len(available_nodes)
     }
 
-def split_capacity(available_nodes, n_nodes):
+def split_capacity(available_nodes, n_nodes, only_info = False):
     keys_for_node = settings.MAX_KEYS // n_nodes
-
+    info = {}
     for i in range(n_nodes):
         _node: Node = available_nodes[i]
 
@@ -22,5 +22,9 @@ def split_capacity(available_nodes, n_nodes):
         if i == n_nodes - 1:
             _max = settings.MAX_KEYS
 
-        _node.set_keys_range(_min, _max)
+        info[_node.host] = (_min, _max)
+        if not only_info:
+            _node.set_keys_range(_min, _max)
+    if only_info:
+        return info
 

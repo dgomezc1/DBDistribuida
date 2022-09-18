@@ -8,6 +8,7 @@ from app.core.config import settings
 from app.api.router import router
 
 from app.works.initialization import Initialization
+from app.works.redistribution import Redistribution
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -34,6 +35,10 @@ app.add_middleware(
 
 # Register routers
 app.include_router(router, prefix=settings.PREFIX)
+
+# Workers
+redistribution = Redistribution()
+redistribution.start()
 
 # Default endpoint
 @app.get(f"{settings.PREFIX}/info")

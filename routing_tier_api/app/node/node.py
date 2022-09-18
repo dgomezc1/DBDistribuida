@@ -41,9 +41,14 @@ class Node:
         if self.status != NodeStatus.ALIVE:
             raise UnavailableNodeException()
 
-        response = requests.get(f"{self.host}/db/")
-        if response.status_code == 200:
-            return response.json()
+        try:
+            response = requests.get(f"{self.host}/db/")
+            if response.status_code == 200:
+                return response.json()
+        except requests.exceptions.ConnectionError:
+            if self.status != NodeStatus.DEAD:
+                print(f"Node {self.host}: Error getting all keys")
+
         raise UnavailableNodeException()
 
     def is_alive(self):

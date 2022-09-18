@@ -48,6 +48,7 @@ class Database:
         if not key in DATABASE:
             raise NoSuchKeyError(f"Key: {key} does not exists in db.")
         del DATABASE[key]
+        self._persist()
 
     def get_keys(self, *args, **kwargs):
         result = list(DATABASE.keys())
