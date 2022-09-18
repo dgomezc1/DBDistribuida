@@ -79,6 +79,18 @@ Antes de ejecutar es necesario contar con Docker Compose y Python instalados, se
 ### ¿Como se ejecuta?
 No es necesario levantar nada, ya que gracias a la herramienta de Supervisor se levanta todo el proyecto de manera automatica, esto ayuda a tomar el proyecto como un servicio, el cual se reiniciara en caso tal de que llegara a fallar para garantizar que va a estar disponible.
 
+#### ¿Como acceder?
+Tenga en cuenta que:
+
+- URL: http://ec2-54-147-188-203.compute-1.amazonaws.com
+- IP Elastica: 54.147.188.203
+- Para acceder a la API, debe hacerlo a traves del puerto 8000 `http://ec2-54-147-188-203.compute-1.amazonaws.com:8000/`
+- Para acceder a la documentación de los endpoints, acceda a `http://ec2-54-147-188-203.compute-1.amazonaws.com:8000/docs`
+- Para acceder a los endpoint que interactuan con la base de datos, debe usar el prefijo `db/`
+- El cliente cuenta por defecto con esta URL para conectarse a los servicios, pero puede ser modificada en cualquier momento
+
+Si desea acceder a la instancia, use el comando `ssh -i "proyecto1.pem" ubuntu@ec2-54-147-188-203.compute-1.amazonaws.com`
+
 Sin embargo, la forma de ejecutarlo de manera manual es muy similar al entorno de desarrollo
 
 - Ejecutar `docker-compose up` o `docker compose up` (segun la versión) para levantar los nodos y el routing tier.

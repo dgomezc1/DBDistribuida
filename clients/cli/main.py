@@ -9,7 +9,9 @@ load_dotenv()
 def load_connection():
     if db_host := os.environ.get("DB_HOST"):
         return db_host
-    return input("[CONFIG] Enter DB Host: ")
+    if db_host := input("[CONFIG] Enter DB Host [default: http://ec2-54-147-188-203.compute-1.amazonaws.com:8000/db]: "):
+        return db_host
+    return "http://ec2-54-147-188-203.compute-1.amazonaws.com:8000/db"
 
 def load_commands():
     return [

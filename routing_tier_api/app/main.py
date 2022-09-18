@@ -1,3 +1,4 @@
+from time import sleep
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -19,6 +20,7 @@ app = FastAPI(
 )
 
 # Initialize nodes
+sleep(5)
 init_nodes = Initialization()
 settings.NODES = init_nodes.run()
 
