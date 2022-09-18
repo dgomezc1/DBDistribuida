@@ -2,7 +2,7 @@
 
 project for db node simulation
 
-[![Built with Cookiecutter](https://img.shields.io/badge/build%20with-Silin%20DS%20Cookiecutter%20FastAPI-purple)](https://gitlab.com/silin-project/data-science/project-templates/ds-fastapi-microservice-template/)
+[![Built with Cookiecutter](https://img.shields.io/badge/build%20with%20Cookiecutter%20FastAPI-purple)](https://github.com/sgg10/cookiecutter-fastapi)
 
 
 # Table of contents
@@ -19,26 +19,21 @@ project for db node simulation
 - It is recommended to have Python3.9 installed to be able to handle dependencies within the text editor and use features such as autocomplete.
 
 # Installing <a name="installing"></a>
-The first step to start the project is the building. There is a .yml file for `dev` environments inside the `compose` directory
+The first step to start the project is the building.
 
 ```bash
-docker-compose -f ./compose/<env>.yml build
+docker-compose build
 ```
 ```bash
-docker compose -f ./compose/<env>.yml build # For the latest versions
+docker compose build # For the latest versions
 ```
-
-Check the environment variables, keep in mind that they are divided between sensitive and non-sensitive, they are kept separate since the sensitive ones should be managed by KMS .
-
-The sensitive variables are located inside the .envs/ directory where you must locate the environment to which you are going to assign the sensitive variables, they are divided into multiple files as appropriate (you will also find .exmple files, so you can upload an example of the sensitive variables you have the repository). These variables are used locally and when deployed they will be supplied by KMS
-
-The non-sensitive variables are found in the vars directory where there is an .env file for each environment, these are the variables that are directly part of the microservice when it is deployed.
+The env variables are located inside the .envs/ directory where you must locate the environment to which you are going to assign variables, they are divided into multiple files as appropriate.
 
 ```bash
-docker-compose -f ./compose/<env>.yml up
+docker-compose up
 ```
 ```bash
-docker compose -f ./compose/<env>.yml up # For the latest versions
+docker compose up # For the latest versions
 ```
 
 # Project structure <a name="structure"></a>
@@ -46,15 +41,15 @@ docker compose -f ./compose/<env>.yml up # For the latest versions
 ds_node_silin_api
 ├── app                             // FastAPI App directory
 │   ├── api                         // Routers that make up the API
-│   │   └── sample                  // Sample of complete router module
-│   │       ├── models.py           // Models for router
-│   │       └── router.py           // Router endpoint registry
+│   │   ├── models.py               // Models for router
+│   │   └── router.py               // Router endpoint registry
 │   ├── core                        // Core of app
 │   │   ├── config.py               // Global configuration for app
 │   │   └── settings                // Settings by ENV module
 │   │       ├── base.py             // Base global setting for app
 │   │       ├── local.py            // Setting for local environment
 │   │       └── production.py       // Setting for production environment
+│   ├── db                          // DB module
 │   └── main.py                     // Main app file
 ├── docker                          // Docker configuration
 │   ├── local
@@ -66,10 +61,6 @@ ds_node_silin_api
 │           └── start               // Script to start fastapi service
 ├── .envs                           // Sensitive variables for each environment
 │   └ .app
-├── .gitlab                         // GitLab Project Configuration
-│   └── issue_templates
-│       ├── Bug.md                  // Bug template
-│       └── FeatureRequest.md       // Feature template
 ├── requirements                    // Recursive requirements
 │   ├── base.txt                    // Base app requirements
 │   ├── local.txt                   // Local requirements
@@ -77,7 +68,6 @@ ds_node_silin_api
 ├── tests                           // Test Directory
 │   └── test_sample.py
 ├── .gitignore
-├── .gitlab-ci.yaml                 // GitLab CI
 ├── .dockerignore
 ├── .editorconfig
 ├── .docker-compose.yml
@@ -96,6 +86,7 @@ _`ENV` in variable name means that it is replaced in the file according to the e
 |PORT|INT|.envs/.app|FALSE|Port on which the microservice runs|
 |SERVICE_NAME|STR|.envs/.app|FALSE|Name of microservice|
 |ALLOWED_ORIGINS|STR|.envs/.app|FALSE|CORS Origins|
+|ID|STR|.envs/.app|FALSE|Node identifier|
 
 # How to use <a name="howto"></a>
 

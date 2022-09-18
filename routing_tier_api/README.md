@@ -1,9 +1,8 @@
 # routing-tier-api
 
-project for router tier
+Project for router tier
 
-[![Built with Cookiecutter](https://img.shields.io/badge/build%20with-Silin%20DS%20Cookiecutter%20FastAPI-purple)](https://gitlab.com/silin-project/data-science/project-templates/ds-fastapi-microservice-template/)
-
+[![Built with Cookiecutter](https://img.shields.io/badge/build%20with%20Cookiecutter%20FastAPI-purple)](https://github.com/sgg10/cookiecutter-fastapi)
 
 # Table of contents
 1. [Prerequisites](#prerequisites)
@@ -19,83 +18,85 @@ project for router tier
 - It is recommended to have Python3.9 installed to be able to handle dependencies within the text editor and use features such as autocomplete.
 
 # Installing <a name="installing"></a>
-The first step to start the project is the building. There is a .yml file for `dev` environments inside the `compose` directory
+The first step to start the project is the building.
 
 ```bash
-docker-compose -f ./compose/<env>.yml build
+docker-compose build
 ```
 ```bash
-docker compose -f ./compose/<env>.yml build # For the latest versions
+docker compose build # For the latest versions
 ```
 
-Check the environment variables, keep in mind that they are divided between sensitive and non-sensitive, they are kept separate since the sensitive ones should be managed by KMS .
-
-The sensitive variables are located inside the .envs/ directory where you must locate the environment to which you are going to assign the sensitive variables, they are divided into multiple files as appropriate (you will also find .exmple files, so you can upload an example of the sensitive variables you have the repository). These variables are used locally and when deployed they will be supplied by KMS
-
-The non-sensitive variables are found in the vars directory where there is an .env file for each environment, these are the variables that are directly part of the microservice when it is deployed.
+The env variables are located inside the .envs/ directory where you must locate the environment to which you are going to assign variables, they are divided into multiple files as appropriate.
 
 ```bash
-docker-compose -f ./compose/<env>.yml up
+docker-compose up
 ```
 ```bash
-docker compose -f ./compose/<env>.yml up # For the latest versions
+docker compose up # For the latest versions
 ```
 
 # Project structure <a name="structure"></a>
 ```
 ds_node_silin_api
-├── app                             // FastAPI App directory
-│   ├── api                         // Routers that make up the API
-│   │   └── sample                  // Sample of complete router module
-│   │       ├── models.py           // Models for router
-│   │       └── router.py           // Router endpoint registry
-│   ├── core                        // Core of app
-│   │   ├── config.py               // Global configuration for app
-│   │   └── settings                // Settings by ENV module
-│   │       ├── base.py             // Base global setting for app
-│   │       ├── local.py            // Setting for local environment
-│   │       └── production.py       // Setting for production environment
-│   └── main.py                     // Main app file
-├── docker                          // Docker configuration
+├── app                                   // FastAPI App directory
+│   ├── api                               // Routers that make up the API
+│   │   ├── models.py                     // Models for router
+│   │   └── router.py                     // Router endpoint registry
+│   ├── core                              // Core of app
+│   │   ├── config.py                     // Global configuration for app
+│   │   └── settings                      // Settings by ENV module
+│   │       ├── base.py                   // Base global setting for app
+│   │       ├── local.py                  // Setting for local environment
+│   │       └── production.py             // Setting for production environment
+│   ├── node                              // Node module
+│   │   ├── node.py                       // Node class
+│   │   └── status.py                     // Node health status check
+│   ├── works                             // Works Module
+│   │   ├── initialization.py             // Global Node initialization
+│   │   ├── redistribution.py             // Redistribution works (for nodes up or down)
+│   │   ├── send_action.py                // Global action sender to nodes
+│   │   └── tasks                         // Tasks submodule
+│   │       ├── calculate_distribution.py // Calcs for determinate node distributions
+│   │       └── key_identifier.py         // Indetify node target in order to key
+│   └── main.py                           // Main app file
+├── logs                                  // Logs Directory
+├── docker                                // Docker configuration
 │   ├── local
 │   │   └── fastapi
-│   │       ├── Dockerfile          // Docker file to local environment
-│   │       └── start               // Script to start fastapi service
+│   │       ├── Dockerfile                // Docker file to local environment
+│   │       └── start                     // Script to start fastapi service
 │   └── production
 │       └── fastapi
-│           └── start               // Script to start fastapi service
-├── .envs                           // Sensitive variables for each environment
+│           └── start                     // Script to start fastapi service
+├── .envs                                 // Sensitive variables for each environment
 │   └ .app
-├── .gitlab                         // GitLab Project Configuration
-│   └── issue_templates
-│       ├── Bug.md                  // Bug template
-│       └── FeatureRequest.md       // Feature template
-├── requirements                    // Recursive requirements
-│   ├── base.txt                    // Base app requirements
-│   ├── local.txt                   // Local requirements
-│   └── production.txt              // Production requirements
-├── tests                           // Test Directory
+├── requirements                          // Recursive requirements
+│   ├── base.txt                          // Base app requirements
+│   ├── local.txt                         // Local requirements
+│   └── production.txt                    // Production requirements
+├── tests                                 // Test Directory
 │   └── test_sample.py
 ├── .gitignore
-├── .gitlab-ci.yaml                 // GitLab CI
 ├── .dockerignore
 ├── .editorconfig
 ├── .docker-compose.yml
-├── Dockerfile                      // Docker file to deploy
+├── Dockerfile                            // Docker file to deploy
 ├── setup.cfg
-├── pytest.ini                      // PyTest configuration file
-└── README.md                       // This file
+├── pytest.ini                            // PyTest configuration file
+└── README.md                             // This file
 ```
 
 # Environment variables <a name="environment"></a>
-_`ENV` in variable name means that it is replaced in the file according to the environment
+`ENV` in variable name means that it is replaced in the file according to the environment
 
 |Name|Type|File|Sensitive|Description|
 |----|----|----|---------|-----------|
 |ENV|STR|.envs/.app|FALSE|`local` or `prod` environment|
 |PORT|INT|.envs/.app|FALSE|Port on which the microservice runs|
 |SERVICE_NAME|STR|.envs/.app|FALSE|Name of microservice|
-|ALLOWED_ORIGINS|STR|.envs/.app|FALSE|CORS Origins|
+|ALLOWED_ORIGINS|LIST|.envs/.app|FALSE|CORS Origins|
+|NODE_HOSTS|LIST|.envs/.app|FALSE|Node hosts to connect|
 
 # How to use <a name="howto"></a>
 
