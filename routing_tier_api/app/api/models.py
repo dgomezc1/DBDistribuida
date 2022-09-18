@@ -9,8 +9,7 @@ class Base(BaseModel):
         ...,
         description="Key of value",
         min_length=1,
-        max_length=40,
-        example='99800b85d3383e3a2fb45eb7d0066a4879a9dad0'
+        example='key_name'
     )
 
 class Read(Base):

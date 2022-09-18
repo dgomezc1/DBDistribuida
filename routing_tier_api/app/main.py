@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Import routers
 
 from app.core.config import settings
-# from app.api.router import router
+from app.api.router import router
 
 from app.works.initialization import Initialization
 
@@ -19,7 +19,7 @@ app = FastAPI(
 
 # Initialize nodes
 init_nodes = Initialization()
-init_nodes.run()
+settings.NODES = init_nodes.run()
 
 # Register Middlewares
 
@@ -33,7 +33,7 @@ app.add_middleware(
 
 
 # Register routers
-# app.include_router(router, prefix=settings.PREFIX)
+app.include_router(router, prefix=settings.PREFIX)
 
 # Default endpoint
 @app.get(f"{settings.PREFIX}/info")

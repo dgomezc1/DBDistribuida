@@ -10,71 +10,61 @@ from fastapi import Response, HTTPException
 # TODO: return node response
 
 
-# from .models import Read, Write
+from .models import Write
 # from app.db import Database
 # from app.db import NoSuchKeyError
 # from app.db import KeyAlreadyExistsError
 
 
-# router = APIRouter(
-#     prefix="/db",
-#     tags = ["Database Actions"],
-#     responses={404: {"description": "Not found"}}
-# )
+from app.works.send_action import SendDBAction
 
-# def execute_db_action(action, *args, **kwargs):
-#     try:
-#         db = Database()
-#         task = getattr(db, action)
-#         return task(*args, **kwargs)
-#     except NoSuchKeyError as nske:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail=str(nske)
-#         )
-#     except KeyAlreadyExistsError as kaee:
-#         raise HTTPException(
-#             status_code=status.HTTP_409_CONFLICT,
-#             detail=str(nske)
-#         )
-#     except Exception as e:
-#         raise HTTPException(
-#             status_code=status.HTTP_500_NOT_FOUND,
-#             detail=str(e)
-#         )
+def execute_db_action(key, method, *args, **kwargs):
+    try:
+        sender = SendDBAction()
+        return sender.run(key, method, *args, **kwargs)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+router = APIRouter(
+    prefix="/db",
+    tags = ["Database Actions"],
+    responses={404: {"description": "Not found"}}
+)
 
 
-# @router.get(
-#     path="/{key}",
-#     status_code=status.HTTP_200_OK,
-# )
-# def get(key: str = Path(...)):
-#     return {
-#         "value": execute_db_action("get", key=key)
-#     }
+@router.get(
+    path="/{key}",
+    status_code=status.HTTP_200_OK,
+)
+def get(key: str = Path(...)):
+    response = execute_db_action(key, 'get')
+    return response.json()
 
-# @router.post(
-#     path="/",
-#     status_code=status.HTTP_201_CREATED,
-# )
-# def insert(obj: Write = Body(...)):
-#     obj = obj.dict()
-#     execute_db_action("save", **obj)
-#     return { "result": "OK" }
+@router.post(
+    path="/",
+    status_code=status.HTTP_201_CREATED,
+)
+def insert(obj: Write = Body(...)):
+    obj = obj.dict()
+    execute_db_action(method="post", **obj)
+    return { "result": "OK" }
 
-# @router.put(
-#     path="/{key}",
-#     status_code=status.HTTP_200_OK,
-# )
-# def update(obj: Write = Body(...)):
-#     obj = obj.dict()
-#     execute_db_action("update", **obj)
-#     return { "result": "OK" }
+@router.put(
+    path="/{key}",
+    status_code=status.HTTP_200_OK,
+)
+def update(obj: Write = Body(...)):
+    obj = obj.dict()
+    execute_db_action(method="put", **obj)
+    return { "result": "OK" }
 
-# @router.delete(
-#     path="/{key}",
-#     status_code=status.HTTP_204_NO_CONTENT,
-# )
-# def delete(key: str = Path(...)):
-#     execute_db_action("delete", key=key)
-#     return Response(status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    path="/{key}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete(key: str = Path(...)):
+    execute_db_action(key, 'delete')
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

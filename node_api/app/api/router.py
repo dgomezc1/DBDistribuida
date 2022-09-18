@@ -27,11 +27,11 @@ def execute_db_action(action, *args, **kwargs):
     except KeyAlreadyExistsError as kaee:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=str(nske)
+            detail=str(kaee)
         )
     except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_500_NOT_FOUND,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
