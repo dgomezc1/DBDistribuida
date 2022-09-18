@@ -44,6 +44,24 @@ services:
       - PORT=8889
     command: /start
 
+  routing_tier_api:
+    build:
+      context: ./routing_tier_api
+      dockerfile: ./docker/local/fastapi/Dockerfile
+    image: routing_tier_api_instance
+    platform: linux/x86_64
+    volumes:
+      - ./routing_tier_api:/code:z
+      - ./db_nodes_data:/db:z
+    env_file:
+      - ./routing_tier_api/.envs/.app
+    container_name: routing_tier_api_instance
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    command: /start
+
 # For future replication implementation
 networks:
   default:

@@ -1,13 +1,20 @@
+import logging
 from time import sleep
 from typing import List
 from threading import Thread
+from datetime import datetime
 
 import requests
 
 from app.node.node import NodeStatus
-from app.core.config import settings, lock
+from app.core.config import settings, lock, ROOT_DIR
 from .tasks.calculate_distribution import validate_alive_nodes_number, split_capacity
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(levelname)s] %(message)s',
+    filename=str(ROOT_DIR.joinpath(f"code/logs/{datetime.now().strftime('%Y%m%d%H%M%S')}.log").resolve())
+)
 
 class Redistribution(Thread):
 
@@ -24,10 +31,10 @@ class Redistribution(Thread):
                 node.check_status()
                 if _actual != node.status:
                     if node.status == NodeStatus.DEAD:
-                        print(f"Node {node.host} is down :(")
+                        logging.error(f"Node {node.host} is down")
                         dead_nodes.append(node)
                     elif _actual == NodeStatus.DEAD and node.status == NodeStatus.ALIVE:
-                        print(f"Node {node.host} is up again :)")
+                        logging.info(f"Node {node.host} is up again")
                         revived_nodes.append(node)
         return dead_nodes, revived_nodes
 
@@ -48,10 +55,7 @@ class Redistribution(Thread):
                 node.set_keys_range(-1, -1)
 
             alive_nodes = validate_alive_nodes_number(settings.NODES)
-            # print("===================NUEVAS CAPACIDADES========================")
             new_capacities = split_capacity(only_info=True, **alive_nodes)
-            # print(new_capacities)
-            # print("===================LLAVES DE NODOS===========================")
             keys_of_nodes = {
                 node.host: [
                     _key
@@ -60,8 +64,6 @@ class Redistribution(Thread):
                 ]
                 for node in alive_nodes["available_nodes"]
             }
-            # print(keys_of_nodes)
-            # print("===================NUEVAS CAPACIDADES=========================")
             for node in alive_nodes["available_nodes"]:
                 keys_of_nodes[node.host] = list(
                     filter(lambda x: x,
@@ -72,14 +74,12 @@ class Redistribution(Thread):
                 for obj in keys_of_nodes[node.host]:
                     key = obj["key"]
                     requests.delete(f'{node.host}/db/{key}')
-                # print(f"{node.host}: ({node.min_key_value}, {node.max_key_value}) -> ({new_capacities[node.host][0]}, {new_capacities[node.host][1]})")
+                logging.info(f"{node.host}: ({node.min_key_value}, {node.max_key_value}) -> ({new_capacities[node.host][0]}, {new_capacities[node.host][1]})")
                 node.set_keys_range(new_capacities[node.host][0], new_capacities[node.host][1])
-            # print("===================LLAVES DE NODOS (UPDATE)===================")
-            # print(keys_of_nodes)
 
             for node in alive_nodes["available_nodes"]:
                 for obj in keys_of_nodes[node.host]:
-                    # print(f"Llave {obj['key']} enviada a {node.host}")
+                    logging.info(f"Key {obj['key']} sent to {node.host}")
                     requests.post(f'{node.host}/db/', json=obj)
 
     def run(self):
