@@ -2,10 +2,11 @@ from fastapi import APIRouter
 from fastapi import status, Path, Body
 from fastapi import Response, HTTPException
 
-from .models import Read, Write
-from app.db import Database
+from .models import Read, Replication, Write
+from app.db import Database, ReplicationDatabase
 from app.db import NoSuchKeyError
 from app.db import KeyAlreadyExistsError
+from app.restore import main as restore_process
 
 
 router = APIRouter(
@@ -14,9 +15,10 @@ router = APIRouter(
     responses={404: {"description": "Not found"}}
 )
 
-def execute_db_action(action, *args, **kwargs):
+def execute_db_action(action, db_type, *args, **kwargs):
     try:
-        db = Database()
+
+        db = db_type()
         task = getattr(db, action)
         return task(*args, **kwargs)
     except NoSuchKeyError as nske:
@@ -42,7 +44,7 @@ def execute_db_action(action, *args, **kwargs):
 )
 def get_all():
     return {
-        "keys": execute_db_action("get_keys")
+        "keys": execute_db_action("get_keys", Database)
     }
 
 @router.post(
@@ -51,7 +53,7 @@ def get_all():
 )
 def insert(obj: Write = Body(...)):
     obj = obj.dict()
-    execute_db_action("save", **obj)
+    execute_db_action("save", Database, **obj)
     return { "result": "OK" }
 
 @router.get(
@@ -60,22 +62,78 @@ def insert(obj: Write = Body(...)):
 )
 def get(key: str = Path(...)):
     return {
-        "value": execute_db_action("get", key=key)
+        "value": execute_db_action("get", Database, key=key)
     }
 
 @router.put(
     path="/{key}",
     status_code=status.HTTP_200_OK,
+    deprecated=True
 )
 def update(obj: Write = Body(...)):
     obj = obj.dict()
-    execute_db_action("update", **obj)
+    execute_db_action("update", Database, **obj)
     return { "result": "OK" }
 
 @router.delete(
     path="/{key}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def delete(key: str = Path(...)):
-    execute_db_action("delete", key=key)
+def delete(key: str = Path(...), rep: Replication = Body(...)):
+    execute_db_action("delete", Database, key = key, **(rep.dict()))
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+# ===================REPLICATION=====================================
+
+@router.get(
+    path="/replication/",
+    status_code=status.HTTP_200_OK,
+)
+def rep_get_all():
+    return {
+        "keys": execute_db_action("get_keys", ReplicationDatabase)
+    }
+
+@router.post(
+    path="/replication",
+    status_code=status.HTTP_201_CREATED,
+)
+def rep_insert(obj: Write = Body(...)):
+    obj = obj.dict()
+    execute_db_action("save", ReplicationDatabase, **obj)
+    return { "result": "OK" }
+
+@router.get(
+    path="/replication/{key}",
+    status_code=status.HTTP_200_OK,
+)
+def rep_get(key: str = Path(...)):
+    return {
+        "value": execute_db_action("get", ReplicationDatabase, key=key)
+    }
+
+@router.put(
+    path="/replication/{key}",
+    status_code=status.HTTP_200_OK,
+    deprecated=True
+)
+def rep_update(obj: Write = Body(...)):
+    obj = obj.dict()
+    execute_db_action("update", ReplicationDatabase, **obj)
+    return { "result": "OK" }
+
+@router.delete(
+    path="/replication/{key}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def rep_delete(key: str = Path(...), rep: Replication = Body(...)):
+    execute_db_action("delete", ReplicationDatabase, key = key, **(rep.dict()))
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post(
+    path="/replication/restore/",
+    status_code=status.HTTP_200_OK
+)
+def restore(rep: Replication = Body(...)):
+    restore_process(rep.node_url)

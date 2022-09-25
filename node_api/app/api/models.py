@@ -1,10 +1,16 @@
-from typing import Union
+from typing import Literal, Union
 
 from pydantic import Field, BaseModel
 
 available_types = Union[str, dict, list, int, float, bool]
 
-class Base(BaseModel):
+class Replication(BaseModel):
+    replication_url: str = Field(default="")
+    is_restore: bool = Field(default=False)
+    node_url: str = Field(default="")
+    insert_type: Literal[0,1] = Field(default=0)
+
+class Base(Replication):
     key: str = Field(
         ...,
         description="Key of value",

@@ -39,8 +39,8 @@ app.add_middleware(
 app.include_router(router, prefix=settings.PREFIX)
 
 # Workers
-redistribution = Redistribution()
-redistribution.start()
+# redistribution = Redistribution()
+# redistribution.start()
 
 # Default endpoint
 @app.get(f"{settings.PREFIX}/info")

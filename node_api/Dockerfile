@@ -59,7 +59,7 @@ COPY --chown=fastapi:fastapi ./docker/production/fastapi/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
-RUN mkdir /db
+RUN mkdir -p /db/replications
 
 # copy application code to WORKDIR
 COPY --chown=fastapi:fastapi . ${APP_HOME}
