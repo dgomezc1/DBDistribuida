@@ -57,7 +57,7 @@ def insert(obj: Write = Body(...)):
     return { "result": "OK" }
 
 @router.get(
-    path="/{key}",
+    path="/{key}/",
     status_code=status.HTTP_200_OK,
 )
 def get(key: str = Path(...)):
@@ -66,7 +66,7 @@ def get(key: str = Path(...)):
     }
 
 @router.put(
-    path="/{key}",
+    path="/{key}/",
     status_code=status.HTTP_200_OK,
     deprecated=True
 )
@@ -76,7 +76,7 @@ def update(obj: Write = Body(...)):
     return { "result": "OK" }
 
 @router.delete(
-    path="/{key}",
+    path="/{key}/",
     status_code=status.HTTP_204_NO_CONTENT,
 )
 def delete(key: str = Path(...), rep: Replication = Body(...)):
@@ -95,7 +95,7 @@ def rep_get_all():
     }
 
 @router.post(
-    path="/replication",
+    path="/replication/",
     status_code=status.HTTP_201_CREATED,
 )
 def rep_insert(obj: Write = Body(...)):
@@ -104,7 +104,7 @@ def rep_insert(obj: Write = Body(...)):
     return { "result": "OK" }
 
 @router.get(
-    path="/replication/{key}",
+    path="/replication/{key}/",
     status_code=status.HTTP_200_OK,
 )
 def rep_get(key: str = Path(...)):
@@ -113,7 +113,7 @@ def rep_get(key: str = Path(...)):
     }
 
 @router.put(
-    path="/replication/{key}",
+    path="/replication/{key}/",
     status_code=status.HTTP_200_OK,
     deprecated=True
 )
@@ -123,7 +123,7 @@ def rep_update(obj: Write = Body(...)):
     return { "result": "OK" }
 
 @router.delete(
-    path="/replication/{key}",
+    path="/replication/{key}/",
     status_code=status.HTTP_204_NO_CONTENT,
 )
 def rep_delete(key: str = Path(...), rep: Replication = Body(...)):

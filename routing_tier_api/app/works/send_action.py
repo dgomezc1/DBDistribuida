@@ -15,24 +15,53 @@ class SendDBAction:
                 selected_node = node
                 break
 
-        if selected_node and selected_node.is_alive():
-            return True, selected_node
+        if selected_node:
+            if selected_node.is_alive():
+                return True, selected_node
+            return True, selected_node, selected_node.replication_node
         return False, None
 
     def run(self, key, method, value=None, *args, **kwargs):
         target = key_encryption(key)
         with lock:
-            can_send, node = self._identify_node(target["n"])
+            identify_result = self._identify_node(target["n"])
+
+            can_send = identify_result[0]
+            node = identify_result[1]
+            use_replication = len(identify_result) == 3
+            if use_replication:
+                node: Node = identify_result[2]
+
+
             if can_send:
-                request_data = {"url": f"{node.host}/db/{target['key']}"}
+
+                request_data = {
+                    "url": f"{node.host}/db/{target['key']}",
+                }
+
+                if method != "get":
+                    request_data["json"] = {
+                        "replication_url": node.replication_node.host,
+                        "is_restore": False,
+                        "node_url": "",
+                        "insert_type": 0
+                    }
+
                 if method in 'post':
                     request_data["url"] = f"{node.host}/db/"
 
                 if method in ['post', 'put']:
-                    request_data["json"] = {
-                        "key": target['key'],
-                        "value": value
-                    }
+                    request_data["json"]["key"] = target['key']
+                    request_data["json"]["value"] = value
+
+
+                if use_replication:
+                    request_data["url"] = request_data["url"].replace("/db/", "/db/replication/")
+                    if "json" in request_data:
+                        request_data["json"]["insert_type"] = 1
+
+                if not request_data["url"].endswith("/"):
+                    request_data["url"] += "/"
 
                 _method = getattr(requests, method)
                 try:

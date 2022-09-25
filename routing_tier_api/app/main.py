@@ -10,6 +10,7 @@ from app.api.router import router
 
 from app.works.initialization import Initialization
 from app.works.redistribution import Redistribution
+from app.works.replication import Replication
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -41,6 +42,8 @@ app.include_router(router, prefix=settings.PREFIX)
 # Workers
 # redistribution = Redistribution()
 # redistribution.start()
+replication = Replication()
+replication.start()
 
 # Default endpoint
 @app.get(f"{settings.PREFIX}/info")

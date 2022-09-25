@@ -20,7 +20,8 @@ class Node:
         self.status = None
         self.min_key_value = None
         self.max_key_value = None
-        self.replication_node_url = None
+        self.replication_node: Node = None
+        self.replicated_node: Node = None
         if health_check(host):
             self.status = NodeStatus.ALIVE
 

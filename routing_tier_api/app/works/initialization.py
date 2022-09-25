@@ -22,5 +22,5 @@ class Initialization:
         split_capacity(**valid_nodes)
         associate_nodes_to_replication(valid_nodes["available_nodes"])
         for node in valid_nodes["available_nodes"]:
-            print(f"{node.host} -> {node.replication_node_url}")
+            print(f"{node.host} -> {node.replication_node.host}")
         return nodes
