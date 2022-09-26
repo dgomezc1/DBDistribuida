@@ -21,13 +21,13 @@
 
 # DDBS (Distributed DB System) <a name="actividad"></a>
 
-Proyecto 01 (Segunda entrega): simulación de una base de datos distribuida
+Proyecto 01 (Entrega Final): Simulación de una base de datos distribuida con particionamiento y replicación
 
 ## Descripción
 Este avance contempla la creación de las siguientes partes:
 
-- Nodo: encargado de la lectura y escritura de la información que reciba (en forma de llave valor). Segun el planteamiento, el unico que accedera a los nodos sera el Routing Tier
-- Routing Tier: encargado de recibir las peticiones de un cliente, este obtiene la llave para poder encriptarla y, con esto, determinar el nodo que debe almacenar o solicitar. Tambien cuenta con monitoreo de salud de los nodos, para identificar cuando un nodo se cae o se vuelve a levantar y así poder actualizar capacidades y redistribuir en función de las nuevas capacidades.
+- Nodo: encargado de la lectura y escritura de la información que reciba (en forma de llave valor). Encargado de la replicación de otro nodo. Segun el planteamiento, el unico que accedera a los nodos sera el Routing Tier
+- Routing Tier: encargado de recibir las peticiones de un cliente, este obtiene la llave para poder encriptarla y, con esto, determinar el nodo que debe almacenar o solicitar. Tambien cuenta con monitoreo de salud de los nodos, para identificar cuando un nodo se cae o se vuelve a levantar. Si un nodo se cae, su réplica recibe las solicitudes. Cuando este nodo se restaura, se inicia una acción de restauración de las operaciones que se hiceron en la réplica mientras la db principal estaba caída.
 - Cliente: este es el punto donde se conecta el usuario para interactuar con el sistema, si bien pueden existir diversos tipos de clientes, el alcance de este avance contempla un cliente CLI
 
 ## Diseño del sistema
@@ -37,6 +37,9 @@ Este avance contempla la creación de las siguientes partes:
 
 ### Contendores
 <img src="./docs/imgs/c2_containers.png" width="70%" height=""></img>
+
+### Particionamiento y Replicación
+<img src="./docs/imgs/c3_partitioning-replication.png" width="70%" height=""></img>
 
 ## Prerequisitos: <a name="prerequisitos"></a>
 
