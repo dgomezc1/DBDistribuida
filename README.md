@@ -39,7 +39,7 @@ Este avance contempla la creación de las siguientes partes:
 <img src="./docs/imgs/c2_containers.png" width="70%" height=""></img>
 
 ### Particionamiento y Replicación
-<img src="./docs/imgs/c3_partitioning-replication.png" width="70%" height=""></img>
+<img src="./docs/imgs/c3_replication.png" width="70%" height=""></img>
 
 ## Prerequisitos: <a name="prerequisitos"></a>
 
